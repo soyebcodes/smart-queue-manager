@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Clock, CalendarCheck, AlertCircle } from "lucide-react";
-import { getLogs, ActivityLog } from "@/lib/logs";
+import { Clock, CalendarCheck, AlertCircle, Users } from "lucide-react";
+import { getLogs, ActivityLog, logActivity } from "@/lib/logs";
 import { getAppointmentsByDate } from "@/lib/appointments";
 import { getQueue } from "@/lib/queue";
 import { getStaff } from "@/lib/staff";
@@ -17,18 +17,26 @@ export default function DashboardPage() {
     });
     const [staffLoad, setStaffLoad] = useState<any[]>([]);
     const [logs, setLogs] = useState<ActivityLog[]>([]);
+    const [logError, setLogError] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         loadDashboardData();
+        logActivity("Dashboard viewed (Heartbeat Test)");
     }, []);
 
     async function loadDashboardData() {
         const today = new Date().toISOString().split("T")[0];
         
-        // 1. Logs
-        const logsData = await getLogs();
-        setLogs(logsData || []);
+        try {
+            // 1. Logs
+            const logsData = await getLogs();
+            setLogs(logsData || []);
+            setLogError(null);
+        } catch (e: any) {
+            console.error("Dashboard: Failed to load logs", e);
+            setLogError(e.message || "Failed to load logs");
+        }
 
         // 2. Queue
         const queueData = await getQueue();
@@ -147,13 +155,21 @@ export default function DashboardPage() {
             <CardTitle>Recent Activity</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4 max-h-[300px] overflow-y-auto">
-                {logs.length === 0 ? <p className="text-sm text-gray-500">No activity logs yet.</p> : logs.map((log) => (
-                    <div key={log.id} className="text-sm text-gray-600 dark:text-gray-300 border-l-2 border-primary/20 pl-3 py-1">
-                        <span className="block font-xs text-gray-400 mb-0.5">{new Date(log.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-                        {log.message}
-                    </div>
-                ))}
+            <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+                {logs.length === 0 ? (
+                    <p className="text-sm text-muted-foreground italic">No activity logs yet.</p>
+                ) : (
+                    logs.map((log) => (
+                        <div key={log.id} className="text-sm border-l-2 border-primary/30 pl-3 py-2 bg-muted/30 rounded-r-md transition-colors hover:bg-muted/50">
+                            <span className="block text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">
+                                {new Date(log.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                            </span>
+                            <p className="text-foreground font-medium leading-relaxed">
+                                {log.message}
+                            </p>
+                        </div>
+                    ))
+                )}
             </div>
           </CardContent>
         </Card>

@@ -8,16 +8,20 @@ export interface ActivityLog {
 }
 
 export async function logActivity(message: string) {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-  if (!user) return; // Or consider logging system events as null user if db allows
+    if (!user) return;
 
-  await supabase.from("activity_logs").insert({
-    user_id: user.id,
-    message,
-  });
+    await supabase.from("activity_logs").insert({
+      user_id: user.id,
+      message,
+    });
+  } catch (err) {
+    console.error("logActivity Error:", err);
+  }
 }
 
 export async function getLogs() {
@@ -28,5 +32,5 @@ export async function getLogs() {
     .limit(10);
 
   if (error) throw error;
-  return data as ActivityLog[];
+  return (data || []) as ActivityLog[];
 }
