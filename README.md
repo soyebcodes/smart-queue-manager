@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Smart Appointment & Queue Manager
 
-## Getting Started
+A robust, premium-designed appointment scheduling and real-time waiting queue management system. Built with **Next.js 15**, **Supabase**, and **Tailwind CSS v4**, this application provides a seamless experience for both administrators and customers.
 
-First, run the development server:
+## ✨ Features
 
+- **📊 Real-time Dashboard**: Live statistics for today's appointments, pending tasks, and staff load distribution.
+- **📅 Smart Appointments**: Advanced booking system with integrated **Conflict Detection** and availability feedback.
+- **🚶 Advanced Queue Management**: Automatically moves unassigned appointments to a waiting queue with manual override capabilities.
+- **👥 Staff & Service Management**: Define service categories, set daily staff capacities, and manage roles.
+- **🕵️ Activity Audit Trail**: Comprehensive logging of all administrative actions (scheduling, staff changes, services).
+- **🎨 Premium UI/UX**:
+  - **Violet/Zinc Theme**: A modern, sophisticated aesthetic.
+  - **Responsive Design**: Full mobile support with a dedicated hamburger navigation menu.
+  - **Dynamic Interactivity**: Hover effects, smooth transitions, and loading states.
+- **🌓 Dark/Light Mode**: Optimized for both professional environments and high-contrast accessibility.
+
+## 🛠️ Tech Stack
+
+- **Framework**: Next.js 16 (App Router)
+- **Styling**: Tailwind CSS
+- **Database & Auth**: Supabase
+
+## 🚀 Getting Started
+
+### 1. Prerequisite
+- Node.js 18+
+- Supabase Account
+
+### 2. Installation
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/soyebcodes/smart-queue-manager.git
+cd smart-queue-manager
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. Environment Setup
+Create a `.env.local` file in the root directory:
+```env
+NEXT_PUBLIC_SUPABASE_URL=your-project-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 5. Run Locally
+```bash
+pnpm dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🏗️ Build for Production
+```bash
+pnpm build
+pnpm start
+```
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📄 License
+MIT
