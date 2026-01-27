@@ -74,3 +74,6 @@ export async function staffLoad(staffId: string, date: string) {
 
   return count || 0;
 }
+
+// Alias for compatibility
+export const getStaffLoad = staffLoad;
