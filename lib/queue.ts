@@ -29,3 +29,13 @@ export async function getQueue() {
   if (error) throw error;
   return data;
 }
+
+// remove item from queue
+export async function removeFromQueue(queueId: string) {
+  const { error } = await supabase
+    .from("waiting_queue")
+    .delete()
+    .eq("id", queueId);
+
+  if (error) throw error;
+}
