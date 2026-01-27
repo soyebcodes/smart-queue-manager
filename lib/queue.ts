@@ -20,6 +20,7 @@ export async function getQueue() {
         customer_name,
         date,
         start_time,
+        end_time,
         services (required_staff_type)
       )
     `,

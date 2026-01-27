@@ -7,13 +7,23 @@ export async function assignFromQueue() {
   const queue = await getQueue();
   if (!queue.length) return;
 
-  const queueItem = queue[0];
-  const appointment = queueItem.appointments;
+  const queueItem: any = queue[0];
+  const appointment = Array.isArray(queueItem.appointments) 
+    ? queueItem.appointments[0] 
+    : queueItem.appointments;
+
+  if (!appointment) return;
+
+  const service = Array.isArray(appointment.services) 
+    ? appointment.services[0] 
+    : appointment.services;
+
+  if (!service) return;
 
   const { data: staffList, error } = await supabase
     .from("staff")
     .select("*")
-    .eq("service_type", appointment.services.required_staff_type)
+    .eq("service_type", service.required_staff_type)
     .eq("status", "AVAILABLE");
 
   if (error) throw error;
@@ -23,7 +33,7 @@ export async function assignFromQueue() {
       staff.id,
       appointment.date,
       appointment.start_time,
-      appointment.end_time,
+      appointment.end_time || appointment.start_time, // Fallback if end_time missing
     );
 
     if (!conflict) {
