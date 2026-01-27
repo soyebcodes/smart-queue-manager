@@ -15,7 +15,7 @@ const handleLogout = async () => {
 };
 
   return (
-    <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-gray-100/40 px-6 dark:bg-gray-800/40 fixed top-0 right-0 left-0 lg:left-64 z-20 backdrop-blur-md">
+    <header className="flex h-14 lg:h-[60px] items-center gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-6 fixed top-0 right-0 left-0 lg:left-64 z-20">
       <div className="w-full flex-1">
         <h1 className="font-semibold text-lg">Dashboard</h1>
       </div>

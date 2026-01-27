@@ -121,15 +121,6 @@ export default function AppointmentPage() {
                  }
              }
         } else {
-            // Auto-assign Logic if "Any" is strictly implied? 
-            // Current requirement says "Users can create appointments... When assigning staff: Show eligible staff... If no staff available: Queue".
-            // So user *should* pick a staff or we try to find one?
-            // Let's stick to explicit selection or "First Available" logic if we want to be smart.
-            // For now, let's assume if they don't pick one, or if they pick "Auto", we try to find one.
-            // BUT, let's keep it simple: User MUST pick a staff from the list which shows availability, OR the system handles "Queue" implicitly if none picked?
-            // Requirement 4: "When assigning staff... If no staff is available... Queue".
-            
-            // Let's default to: If user picks a staff, we try that. If they don't, we look for one.
             const availableStaff = staffList.filter(s => 
                 s.service_type === service.required_staff_type && 
                 s.status === "AVAILABLE" &&
@@ -185,7 +176,7 @@ export default function AppointmentPage() {
     : [];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full max-w-7xl mx-auto my-4">
       <div className="flex items-center justify-between">
          <h2 className="text-3xl font-bold tracking-tight">Appointments</h2>
       </div>

@@ -11,7 +11,7 @@ export default function Home() {
          </Link>
       </div>
       
-      <main className="w-full max-w-4xl space-y-8 text-center">
+      <main className="w-11/12 max-w-7xl space-y-8 text-center mx-auto">
         <div className="space-y-4">
           <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">
             Smart Appointment & Queue Manager
@@ -51,13 +51,6 @@ export default function Home() {
                Automatically queue appointments when staff are busy and assign them when available.
              </CardContent>
            </Card>
-        </div>
-
-        <div className="flex justify-center gap-4">
-          <Link href="/login">
-            <Button size="lg">Get Started</Button>
-          </Link>
-          <Button variant="outline" size="lg">View Documentation</Button>
         </div>
       </main>
     </div>

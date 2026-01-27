@@ -62,7 +62,7 @@ export default function QueuePage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full max-w-7xl mx-auto my-4">
        <div className="flex items-center justify-between">
          <h2 className="text-3xl font-bold tracking-tight">Waiting Queue</h2>
          <Button variant="outline" onClick={loadData}>Refresh Queue</Button>

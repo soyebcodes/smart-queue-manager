@@ -42,8 +42,8 @@ export default function StaffPage() {
   }, []);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 w-full max-w-7xl mx-auto my-4">
+      <div className="flex items-center justify-center">
          <h2 className="text-3xl font-bold tracking-tight">Staff Management</h2>
       </div>
 
