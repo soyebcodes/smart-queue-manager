@@ -22,7 +22,6 @@ export default function DashboardPage() {
 
     useEffect(() => {
         loadDashboardData();
-        logActivity("Dashboard viewed (Heartbeat Test)");
     }, []);
 
     async function loadDashboardData() {
