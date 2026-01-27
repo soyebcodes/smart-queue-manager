@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { AlertCircle, CheckCircle2, CalendarCheck } from "lucide-react";
+import { logActivity } from "@/lib/logs";
 
 export default function AppointmentPage() {
   const [services, setServices] = useState<any[]>([]);
@@ -145,6 +146,7 @@ export default function AppointmentPage() {
                 start_time: startTime,
                 end_time: endTime,
             });
+            await logActivity(`Scheduled appointment for "${customerName}" with ${staffList.find(s => s.id === assignedStaffId)?.name || 'staff'}.`);
             if (!message) setMessage({ type: 'success', text: "Appointment scheduled successfully!" });
         } else {
              const appt = await createAppointment({
@@ -156,6 +158,7 @@ export default function AppointmentPage() {
                 end_time: endTime,
             });
             await addToQueue(appt.id);
+            await logActivity(`No staff available. Added ${customerName} to the waiting queue for ${service.name}.`);
             setMessage({ type: 'warning', text: "No staff available. Added to Waiting Queue." });
         }
 

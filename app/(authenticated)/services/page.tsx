@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Briefcase } from "lucide-react";
+import { logActivity } from "@/lib/logs";
 
 export default function ServicesPage() {
   const [services, setServices] = useState<any[]>([]);
@@ -32,6 +33,7 @@ export default function ServicesPage() {
       duration: parseInt(duration),
       required_staff_type: requiredStaffType,
     });
+    await logActivity(`Created new service: ${name} (${duration} min)`);
     setName("");
     setLoading(false);
     loadServices();

@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Users } from "lucide-react";
+import { logActivity } from "@/lib/logs";
 
 export default function StaffPage() {
   const [staff, setStaff] = useState<any[]>([]);
@@ -33,6 +34,7 @@ export default function StaffPage() {
       daily_capacity: 5,
       status: "AVAILABLE",
     });
+    await logActivity(`Added new staff member: ${name} (${serviceType})`);
     setName("");
     setLoading(false);
     loadStaff();
