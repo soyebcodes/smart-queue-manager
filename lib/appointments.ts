@@ -1,5 +1,21 @@
 import { supabase } from "./supabase";
 
+export interface Appointment {
+  id: string;
+  customer_name: string;
+  service_id: string;
+  staff_id?: string | null;
+  date: string;
+  start_time: string;
+  end_time: string;
+  status: "SCHEDULED" | "COMPLETED" | "CANCELLED" | "NO_SHOW";
+  notes?: string;
+  created_at: string;
+  // Joins
+  staff?: { name: string };
+  services?: { name: string; duration: number };
+}
+
 export async function getAppointmentsByDate(date: string) {
   const { data, error } = await supabase
     .from("appointments")
@@ -14,7 +30,7 @@ export async function getAppointmentsByDate(date: string) {
     .order("start_time");
 
   if (error) throw error;
-  return data;
+  return data as Appointment[];
 }
 
 export async function createAppointment(input: {
@@ -24,6 +40,7 @@ export async function createAppointment(input: {
   date: string;
   start_time: string;
   end_time: string;
+  status?: string;
 }) {
   const {
     data: { user },
@@ -36,6 +53,7 @@ export async function createAppointment(input: {
     .insert({
       ...input,
       user_id: user.id,
+      status: input.status || "SCHEDULED",
     })
     .select()
     .single();
@@ -51,11 +69,13 @@ export async function hasConflict(
   start: string,
   end: string,
 ) {
+  // Logic: An appointment overlaps if (StartA < EndB) and (EndA > StartB)
   const { data } = await supabase
     .from("appointments")
     .select("id")
     .eq("staff_id", staffId)
     .eq("date", date)
+    .eq("status", "SCHEDULED") // Only count scheduled appointments
     .lt("start_time", end)
     .gt("end_time", start)
     .limit(1);
@@ -63,7 +83,7 @@ export async function hasConflict(
   return data && data.length > 0;
 }
 
-// capicity check
+// capacity check
 export async function staffLoad(staffId: string, date: string) {
   const { count } = await supabase
     .from("appointments")
