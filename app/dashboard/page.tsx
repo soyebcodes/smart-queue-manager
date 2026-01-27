@@ -3,71 +3,106 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Clock, CalendarCheck, AlertCircle } from "lucide-react";
-// We will implement real data fetching in later chunks or refine it here.
-// For now, let's setup the UI structure as per requirements.
+import { getLogs, ActivityLog } from "@/lib/logs";
+import { getAppointmentsByDate } from "@/lib/appointments";
+import { getQueue } from "@/lib/queue";
+import { getStaff } from "@/lib/staff";
 
 export default function DashboardPage() {
-    // Mock data for UI development
-    const stats = [
-        {
-            title: "Total Appointments",
-            value: "12",
-            description: "Scheduled for today",
-            icon: CalendarCheck,
-        },
-        {
-            title: "Pending",
-            value: "4",
-            description: "Yet to be served",
-            icon: Clock,
-        },
-        {
-            title: "Completed",
-            value: "8",
-            description: "Successfully served",
-            icon: Users,
-        },
-        {
-            title: "Waiting Queue",
-            value: "3",
-            description: "People waiting",
-            icon: AlertCircle,
+    const [stats, setStats] = useState({
+        total: 0,
+        pending: 0,
+        completed: 0,
+        queue: 0
+    });
+    const [staffLoad, setStaffLoad] = useState<any[]>([]);
+    const [logs, setLogs] = useState<ActivityLog[]>([]);
+
+    useEffect(() => {
+        loadDashboardData();
+    }, []);
+
+    async function loadDashboardData() {
+        const today = new Date().toISOString().split("T")[0];
+        
+        // 1. Logs
+        const logsData = await getLogs();
+        setLogs(logsData || []);
+
+        // 2. Queue
+        const queueData = await getQueue();
+        const queueCount = queueData ? queueData.length : 0;
+
+        // 3. Appointments
+        const appts = await getAppointmentsByDate(today);
+        if (appts) {
+            setStats({
+                total: appts.length,
+                pending: appts.filter(a => a.status === 'SCHEDULED').length,
+                completed: appts.filter(a => a.status === 'COMPLETED').length,
+                queue: queueCount
+            });
         }
-    ];
 
-    const staffLoad = [
-        { name: "Riya", current: 4, max: 5, status: "OK" },
-        { name: "Farhan", current: 5, max: 5, status: "Booked" },
-        { name: "Alex", current: 2, max: 5, status: "OK" },
-    ];
-
-    const logs = [
-        "12:10 PM — Appointment moved from queue to Farhan.",
-        "11:45 AM — Appointment for 'John Doe' auto-assigned to Riya.",
-        "11:30 AM — New appointment scheduled for Alice.",
-        "11:15 AM — Staff member 'Farhan' marked as 'Booked'.",
-        "10:00 AM — System started."
-    ];
+        // 4. Staff Load (Approximate for Overview)
+        const staffData = await getStaff();
+        if (staffData && appts) {
+            const loads = staffData.map((s: any) => {
+                const count = appts.filter(a => a.staff_id === s.id && a.status === 'SCHEDULED').length; // Simplification
+                return {
+                    name: s.name,
+                    current: count,
+                    max: s.daily_capacity,
+                    status: count >= s.daily_capacity ? "Booked" : "OK"
+                };
+            });
+            setStaffLoad(loads);
+        }
+    }
 
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat, index) => (
-          <Card key={index}>
+        <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {stat.title}
-              </CardTitle>
-              <stat.icon className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Total Appointments</CardTitle>
+              <CalendarCheck className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stat.value}</div>
-              <p className="text-xs text-muted-foreground">
-                {stat.description}
-              </p>
+              <div className="text-2xl font-bold">{stats.total}</div>
+              <p className="text-xs text-muted-foreground">Scheduled for today</p>
             </CardContent>
-          </Card>
-        ))}
+        </Card>
+         <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Pending</CardTitle>
+              <Clock className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.pending}</div>
+              <p className="text-xs text-muted-foreground">Yet to be served</p>
+            </CardContent>
+        </Card>
+        <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Completed</CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.completed}</div>
+              <p className="text-xs text-muted-foreground">Successfully served</p>
+            </CardContent>
+        </Card>
+        <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Waiting Queue</CardTitle>
+              <AlertCircle className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.queue}</div>
+              <p className="text-xs text-muted-foreground">People waiting</p>
+            </CardContent>
+        </Card>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
@@ -77,7 +112,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-                {staffLoad.map((staff, i) => (
+                {staffLoad.length === 0 ? <p className="text-sm text-gray-500">No active staff found.</p> : staffLoad.map((staff, i) => (
                     <div key={i} className="flex items-center justify-between border-b pb-2 last:border-0 last:pb-0">
                         <div className="font-medium">{staff.name}</div>
                         <div className="flex items-center gap-2">
@@ -99,10 +134,11 @@ export default function DashboardPage() {
             <CardTitle>Recent Activity</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-                {logs.map((log, i) => (
-                    <div key={i} className="text-sm text-gray-600 dark:text-gray-300 border-l-2 border-gray-200 pl-3 py-1">
-                        {log}
+            <div className="space-y-4 max-h-[300px] overflow-y-auto">
+                {logs.length === 0 ? <p className="text-sm text-gray-500">No activity logs yet.</p> : logs.map((log) => (
+                    <div key={log.id} className="text-sm text-gray-600 dark:text-gray-300 border-l-2 border-primary/20 pl-3 py-1">
+                        <span className="block font-xs text-gray-400 mb-0.5">{new Date(log.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                        {log.message}
                     </div>
                 ))}
             </div>

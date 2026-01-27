@@ -1,11 +1,18 @@
 import { supabase } from "./supabase";
 
+export interface ActivityLog {
+    id: string;
+    user_id: string;
+    message: string;
+    created_at: string;
+}
+
 export async function logActivity(message: string) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) return;
+  if (!user) return; // Or consider logging system events as null user if db allows
 
   await supabase.from("activity_logs").insert({
     user_id: user.id,
@@ -21,5 +28,5 @@ export async function getLogs() {
     .limit(10);
 
   if (error) throw error;
-  return data;
+  return data as ActivityLog[];
 }
