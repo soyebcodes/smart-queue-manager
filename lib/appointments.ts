@@ -80,7 +80,7 @@ export async function hasConflict(
     .gt("end_time", start)
     .limit(1);
 
-  return data && data.length > 0;
+  return !!(data && data.length > 0);
 }
 
 // capacity check

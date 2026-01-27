@@ -17,6 +17,7 @@ export default function DashboardPage() {
     });
     const [staffLoad, setStaffLoad] = useState<any[]>([]);
     const [logs, setLogs] = useState<ActivityLog[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         loadDashboardData();
@@ -58,10 +59,22 @@ export default function DashboardPage() {
             });
             setStaffLoad(loads);
         }
+        setLoading(false);
+    }
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-[60vh]">
+                <div className="flex flex-col items-center gap-2">
+                    <Clock className="h-8 w-8 animate-spin text-primary opacity-20" />
+                    <p className="text-sm text-muted-foreground">Loading dashboard...</p>
+                </div>
+            </div>
+        );
     }
 
   return (
-    <div className="space-y-6 w-full max-w-7xl mx-auto my-4">
+    <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

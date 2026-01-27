@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Users } from "lucide-react";
 
 export default function StaffPage() {
   const [staff, setStaff] = useState<any[]>([]);
@@ -42,8 +43,8 @@ export default function StaffPage() {
   }, []);
 
   return (
-    <div className="space-y-6 w-full max-w-7xl mx-auto my-4">
-      <div className="flex items-center justify-center">
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
          <h2 className="text-3xl font-bold tracking-tight">Staff Management</h2>
       </div>
 
@@ -106,7 +107,13 @@ export default function StaffPage() {
                 <TableBody>
                     {staff.length === 0 ? (
                         <TableRow>
-                           <TableCell colSpan={4} className="text-center h-24">No staff members found.</TableCell>
+                           <TableCell colSpan={4} className="text-center h-48">
+                               <div className="flex flex-col items-center justify-center text-muted-foreground">
+                                   <Users className="h-8 w-8 mb-2 opacity-20" />
+                                   <p>No staff members found.</p>
+                                   <p className="text-xs">Add your first staff member to get started.</p>
+                               </div>
+                           </TableCell>
                         </TableRow>
                     ) : (
                         staff.map((s) => (

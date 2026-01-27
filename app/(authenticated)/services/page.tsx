@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Briefcase } from "lucide-react";
 
 export default function ServicesPage() {
   const [services, setServices] = useState<any[]>([]);
@@ -41,8 +42,8 @@ export default function ServicesPage() {
   }, []);
 
   return (
-    <div className="space-y-6 w-full max-w-7xl mx-auto my-4">
-       <div className="flex items-center justify-between">
+    <div className="space-y-6">
+       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
          <h2 className="text-3xl font-bold tracking-tight">Services</h2>
       </div>
 
@@ -117,7 +118,13 @@ export default function ServicesPage() {
                 <TableBody>
                      {services.length === 0 ? (
                         <TableRow>
-                           <TableCell colSpan={3} className="text-center h-24">No services defined.</TableCell>
+                           <TableCell colSpan={3} className="text-center h-48">
+                               <div className="flex flex-col items-center justify-center text-muted-foreground">
+                                   <Briefcase className="h-8 w-8 mb-2 opacity-20" />
+                                   <p>No services defined.</p>
+                                   <p className="text-xs">Create services to enable booking.</p>
+                               </div>
+                           </TableCell>
                         </TableRow>
                     ) : (
                         services.map((s) => (

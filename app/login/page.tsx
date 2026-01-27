@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Label } from "@/components/ui/label"; // We might need to create this or use plain HTML label
+import { LayoutDashboard } from "lucide-react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -39,9 +40,14 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-gray-900 p-4">
-      <Card className="w-11/12 max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Login</CardTitle>
+      <Card className="w-11/12 max-w-md shadow-lg border-primary/10">
+        <CardHeader className="space-y-1 text-center">
+          <div className="flex justify-center mb-2">
+              <div className="p-3 bg-primary/10 rounded-xl">
+                <LayoutDashboard className="h-6 w-6 text-primary" />
+              </div>
+          </div>
+          <CardTitle className="text-2xl font-bold tracking-tight">Welcome Back</CardTitle>
           <CardDescription>
             Enter your email and password to access the dashboard
           </CardDescription>
