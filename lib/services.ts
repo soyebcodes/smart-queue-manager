@@ -1,5 +1,13 @@
 import { supabase } from "./supabase";
 
+export interface Service {
+  id: string;
+  name: string;
+  duration: number;
+  required_staff_type: string;
+  created_at?: string;
+}
+
 export async function getServices() {
   const { data, error } = await supabase
     .from("services")
@@ -7,7 +15,7 @@ export async function getServices() {
     .order("created_at", { ascending: true });
 
   if (error) throw error;
-  return data;
+  return data as Service[];
 }
 
 export async function createService(input: {
