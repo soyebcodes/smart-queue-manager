@@ -1,6 +1,6 @@
 # Smart Appointment & Queue Manager
 
-A robust, premium-designed appointment scheduling and real-time waiting queue management system. Built with **Next.js 15**, **Supabase**, and **Tailwind CSS v4**, this application provides a seamless experience for both administrators and customers.
+A robust, premium-designed appointment scheduling and real-time waiting queue management system. Built with **Next.js 16**, **Supabase**, and **Tailwind CSS**, this application provides a seamless experience for both administrators and customers.
 
 ## ✨ Features
 
